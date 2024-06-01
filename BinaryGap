@@ -1,0 +1,43 @@
+
+void dec2Bin(int binaryN[],int* binLength, int N){
+    // convert dec to bin
+    int decN=N, count=0;
+
+    while(decN>0){
+        binaryN[count]=decN%2;
+        decN=decN/2;
+        ++count;
+    }
+    *binLength=count;
+}
+
+int maxBinGap(int binaryN[], int lengthN){
+    int count=0, maxGap=0;
+    int flag=0;
+    for(int i=0;i<lengthN;++i){
+        if(flag==0 && binaryN[i]==1){
+            flag=1;
+        }
+        if(flag==1 && binaryN[i]==0){
+            ++count;
+        }
+        if(flag==1 && binaryN[i]==1){
+            if(maxGap<count){
+                maxGap=count;
+            }
+            count=0;
+        }
+    }
+    return maxGap;
+}
+
+int solution(int N) {
+    // This code receives a positive integer and returns the largest number of    zeros between two ones in the binary representation of the number
+    
+    int binaryN[32];
+    int lengthN=0;
+
+    dec2Bin(binaryN,&lengthN,N);
+
+    return maxBinGap(binaryN,lengthN);
+}

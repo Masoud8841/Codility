@@ -1,0 +1,29 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+void shiftArray(int A[], int N, int K){
+    int i,j=K%N;
+    int shiftTemp[N];
+    for(i=0;i<N;++i){
+        shiftTemp[i]=A[i];
+    }
+    for(i=0;i<N-j;++i){
+        A[i+j]=shiftTemp[i];
+    }
+    for(i=0;i<j;++i){
+        A[i]=shiftTemp[N-j+i];
+    }
+}
+struct Results solution(int A[], int N, int K) {
+    // Implement your solution here
+    struct Results result;
+    result.N =N;
+    result.A=A;
+    if(N==0){
+        return result;
+    }
+    if(K%N==0){
+        return result;
+    }
+    shiftArray(A,N,K);
+    return result;
+}

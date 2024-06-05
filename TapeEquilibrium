@@ -1,0 +1,31 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int minDiffAbs(int leftSum, int rightSum){
+    int minDiff=leftSum-rightSum;
+    if(minDiff<0){
+        minDiff=-minDiff;
+    }
+    return minDiff;
+}
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    int leftSum=A[0];
+    int rightSum=0;
+    int minDiff, temp, count=2;
+    for(int i=1;i<N;++i){
+        rightSum+=A[i];
+    }
+    minDiff=minDiffAbs(leftSum,rightSum);
+    while(count<=N-1){
+        leftSum+=A[count-1];
+        rightSum+=-A[count-1];
+        temp=minDiffAbs(leftSum,rightSum);
+        if(minDiff>temp){
+            minDiff=temp;
+        }
+        ++count;
+    }
+    
+    return minDiff;
+}

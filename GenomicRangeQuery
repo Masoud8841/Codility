@@ -1,0 +1,67 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+
+int calMinQuery(int A[], int N, int p, int q){
+    if(N==0){
+        return 0;
+    }
+    int indx1=0;
+    while(indx1<N && A[indx1]<p){
+        ++indx1;
+    }
+    if(indx1>=N){
+        return 0;
+    }
+    if(A[indx1]>q){
+        return 0;
+    }
+    return 1;
+}
+
+struct Results solution(char *S, int P[], int Q[], int M) {
+    // Implement your solution here
+    struct Results result;
+    int * QueryArray=(int *)malloc(M*sizeof(int));
+    int numArray1[100000], numLength1=0;
+    int numArray2[100000], numLength2=0;
+    int numArray3[100000], numLength3=0;
+    int numlength=0, flag=0;
+    while(*(S+numlength)!='\0'){
+        switch (*(S+numlength)){
+            case 'A':
+            numArray1[numLength1]=numlength;
+            ++numLength1;
+            break;
+            case 'C':
+            numArray2[numLength2]=numlength;
+            ++numLength2;
+            break;
+            case 'G':
+            numArray3[numLength3]=numlength;
+            ++numLength3;
+            break;
+            default:
+            break;
+        }
+        ++numlength;
+    }
+    for(int i=0;i<M;++i){
+        flag=calMinQuery(numArray1,numLength1,P[i],Q[i]);
+        QueryArray[i]=flag;
+        if(QueryArray[i]==0){
+            flag=calMinQuery(numArray2,numLength2,P[i],Q[i]);
+            QueryArray[i]=2*flag;
+        }
+        if(QueryArray[i]==0){
+            flag=calMinQuery(numArray3,numLength3,P[i],Q[i]); 
+            QueryArray[i]=3*flag; 
+        }
+        if(QueryArray[i]==0){
+            QueryArray[i]=4;  
+        }
+    }
+
+    result.A = QueryArray;
+    result.M = M;
+    return result;
+}

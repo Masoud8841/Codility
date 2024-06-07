@@ -1,0 +1,11 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+
+int solution(int A, int B, int K) {
+    // Implement your solution here
+    int d1=A/K, d2=B/K;
+    if(A%K==0){
+        d1=d1-1;
+    }
+    return d2-d1;
+}

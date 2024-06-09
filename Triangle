@@ -1,0 +1,73 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+void swapElements(int* a, int* b){
+    int temp=*a;
+    *a=*b;
+    *b=temp;
+}
+
+void sortArray(int A[], int low, int high){
+    if(low>=high){
+        return;
+    }
+    int temp=A[high];
+    int i=low, j=high-1;
+    while(i<j){
+        while(i<j && A[i]<=temp){
+            ++i;
+        }
+        while(i<j && A[j]>=temp){
+            --j;
+        }
+        if(A[i]>temp && A[j]<temp){
+            swapElements(&A[i],&A[j]);
+        }
+    }
+    if(A[i]<=A[high]){
+        swapElements(&A[i+1],&A[high]);
+        sortArray(A,low,i);
+        sortArray(A,i+2,high);
+    }
+    else{
+        swapElements(&A[i],&A[high]);
+        sortArray(A,low,i-1);
+        sortArray(A,i+1,high);
+    }
+}
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N<3){
+        return 0;
+    }
+    int B[N], count=0;
+    for(int i=0;i<N;++i){
+        if(A[i]>0){
+            ++count;
+            B[count-1]=A[i];
+        }
+    }
+    if(count<3){
+        return 0;
+    }
+    double a,b,c;
+    for(int i=0;i<count-2;++i){
+        a=B[i];
+        b=B[i+1];
+        c=B[i+2];
+        if(a+b>c && a+c>b && b+c>a){
+            return 1;
+        }
+    }
+    sortArray(B,0,count-1);
+    for(int i=0;i<count-2;++i){
+        a=B[i];
+        b=B[i+1];
+        c=B[i+2];
+        if(a+b>c && a+c>b && b+c>a){
+            return 1;
+        }
+    }
+    return 0;
+
+}

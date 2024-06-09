@@ -1,0 +1,57 @@
+ // you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+void swapElements(int* a, int* b){
+    int temp=*a;
+    *a=*b;
+    *b=temp;
+}
+
+void sortArray(int A[], int low, int high){
+    if(low>=high){
+        return;
+    }
+    int temp=A[high];
+    int i=low, j=high-1;
+    while(i<j){
+        while(i<j && A[i]<=temp){
+            ++i;
+        }
+        while(i<j && A[j]>=temp){
+            --j;
+        }
+        if(A[i]>temp && A[j]<temp){
+            swapElements(&A[i],&A[j]);
+        }
+    }
+    if(A[i]<=A[high]){
+        swapElements(&A[i+1],&A[high]);
+        sortArray(A,low,i);
+        sortArray(A,i+2,high);
+    }
+    else{
+        swapElements(&A[i],&A[high]);
+        sortArray(A,low,i-1);
+        sortArray(A,i+1,high);
+    }
+}
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N==0){
+        return NULL;
+    }
+    if(N==1){
+        return 1;
+    }
+
+    sortArray(A,0,N-1);
+    int count=1, val=A[0];
+
+    for(int i=1;i<N;++i){
+        if(A[i]!=val){
+            ++count;
+            val=A[i];
+        }
+    }
+    return count;
+}

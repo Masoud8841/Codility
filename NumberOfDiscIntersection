@@ -1,0 +1,91 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int findRightIntLocation(int B[],int a, int c,int i, int N){
+    if(i>=N-1){
+        return N;
+    }
+    int indx1=i+1;
+    int indx2=N;
+    if(a<B[indx1]-c){
+            return indx1;
+    }
+    if(a>=B[N-1]-c){
+        return N;
+    }
+    int temp=0;
+    while(indx1<indx2-2){
+        temp=(indx1+indx2)/2;
+        if(a>=B[temp]-c){
+            indx1=temp;
+        }
+        else{
+            indx2=temp;
+        }
+    }
+    while(a>=B[indx1]-c && indx1<N){
+        ++indx1;
+    }
+    return indx1; 
+}
+void swapElements(int* a, int* b,int* c, int* d){
+    int temp=*a;
+    *a=*b;
+    *b=temp;
+    temp=*c;
+    *c=*d;
+    *d=temp;
+    return;
+}
+void sortArrayIndex(int B[], int C[], int low, int high){
+    if(low>=high || high<=0){
+        return;
+    }
+    int i=low, j=high-1, temp=B[high];
+    while(i<j){
+        while(i<j && B[i]<=temp){
+            ++i;
+        }
+        while(i<j && B[j]>=temp){
+            --j;
+        }
+        if(B[i]>temp && B[j]<temp){
+            swapElements(&B[i], &B[j], &C[i], &C[j]);
+        }
+    }
+    if(B[i]<=temp){
+        swapElements(&B[i+1], &B[high], &C[i+1], &C[high]);
+        sortArrayIndex(B,C,i+2,high);
+        sortArrayIndex(B,C,low,i);   
+    }
+    else{
+        swapElements(&B[i], &B[high], &C[i], &C[high]);
+        sortArrayIndex(B,C,i+1,high);
+        sortArrayIndex(B,C,low,i-1); 
+    }
+}
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N<2){
+        return 0;
+    }
+    int B[N],C[N],i,count=0;
+    const int maxCount=10000000;
+    for(i=0;i<N;++i){
+        B[i]=i-A[i];
+        C[i]=i;
+    }
+    int low=0;
+    while(B[low]<=B[low+1] && low<N-1){
+        ++low;
+    }
+    if(low<N-1){
+        sortArrayIndex(B,C,0,N-1);
+    }
+    for(i=0;i<N-1;++i){
+        count+=findRightIntLocation(B,A[C[i]],C[i],i,N)-i-1;
+        if(count>maxCount){
+            return -1;
+        }
+    }
+    return count;
+}

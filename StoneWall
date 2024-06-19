@@ -1,0 +1,122 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+void updateCount(int indx[], int* count2, int* count1, int H){
+    if(indx[*count2-1]<H){
+        indx[*count2]=H;
+        *count1=*count1+1;
+        *count2=*count2+1;
+        return;
+    }
+    if(indx[*count2-1]==H){
+            return;
+    }
+    if(indx[*count2-1]>H){
+        int j=*count2-1;
+        while(j>-1 && indx[j]>H){
+            indx[j]=H;
+            --j;
+        }
+        if(j>-1 && indx[j]<H){
+            *count1=*count1+1;
+        }
+        return;
+    }
+}
+int solution(int H[], int N) {
+    // Implement your solution here
+    if(N==1){
+        if(H[0]>0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+    int flag=0;
+    for(int i=0;i<N;++i){
+        if(H[i]!=0){
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0){
+        return 0;
+    }
+    flag=0;
+    for(int i=0;i<N-1;++i){
+        if(H[i]<=H[i+1]){
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0 && H[N-1]>0){
+        return N;
+    }
+    flag=0;
+    for(int i=0;i<N-1;++i){
+        if(H[i]>=H[i+1]){
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0 && H[0]>0){
+        return N;
+    }
+    flag=0;
+    for(int i=0;i<=N/2;++i){
+        if(H[i]!=H[N-1-i] || H[i]==0){
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0){
+        int flag2=0;
+        for(int i=0;i<(N-1)/2;++i){
+            if(H[i]>=H[i+1]){
+                flag2=1;
+                break;
+            }
+        }
+        if(flag2==0){
+            return (N+1)/2;
+        }
+        flag2=0;
+        for(int i=0;i<(N-1)/2;++i){
+            if(H[i]<=H[i+1]){
+                flag2=1;
+                break;
+            }
+        }
+        if(flag2==0){
+            return (N+1)/2;
+        }
+    }
+
+    int count1=0, count2=0, indx[N];
+    for(int i=0;i<N;++i){
+        if(H[i]==0){
+            count2=0;
+        }
+        else if(H[i]>0 && count2==0){
+            ++count1;
+            count2=1;
+            indx[0]=H[i];
+        }
+        else{
+            if(H[i]<indx[0]){
+                ++count1;
+                count2=1;
+                indx[0]=H[i];
+            }
+            else if(H[i]>indx[count2-1]){
+                indx[count2]=H[i];
+                ++count2;
+                ++count1;
+            }
+            else{
+                updateCount(indx,&count2,&count1,H[i]);
+            } 
+        }
+    }
+    return count1;
+}

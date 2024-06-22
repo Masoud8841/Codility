@@ -1,0 +1,28 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int maxValue(int a, int b){
+    if(a>b){
+        return a;
+    }
+    else{
+        return b;
+    }
+}
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N<=1){
+        return 0;
+    }
+    if(N==2){
+        return maxValue(A[1]-A[0],0);
+    }
+    int B[N-1];
+    int bestGain;
+    B[N-2]=A[N-1]-A[N-2];
+    bestGain=B[N-2];
+    for(int i=N-3;i>=0;--i){
+        B[i]=maxValue(A[i+1]-A[i],A[i+1]-A[i]+B[i+1]);
+        bestGain=maxValue(bestGain,B[i]);
+    }
+    return maxValue(bestGain,0);
+}

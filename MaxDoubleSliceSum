@@ -1,0 +1,37 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int maxVal(int x, int y){
+    if(x>=y){
+        return x;
+    }
+    return y;
+}
+void findSumMinusMin(int A[], int i, int j, int B[]){
+    if(j-i<=2){
+        B[0]=A[i+1];
+        B[1]=A[i+1];
+        return;
+    }
+    B[0]=B[0]+A[j-1];
+    B[1]=-maxVal(-B[1],-A[j-1]);
+    return;
+}
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N==3){
+        return 0;
+    }
+    int maxSum=0;
+    int B[2];
+    for(int i=0;i<N-2;++i){
+        B[0]=0;
+        B[1]=0;
+        for(int j=i+2;j<N;++j){
+            findSumMinusMin(A,i,j,B);
+            maxSum=maxVal(B[0]-B[1],maxSum);
+        }
+        //printf("maxSum is %d \n",maxSum);
+    }
+    return maxSum;
+
+}

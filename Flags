@@ -1,0 +1,67 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+#include <math.h>
+int findPeaks(int A[], int B[], int N){
+    int countPeaks=0;
+    for(int i=1;i<=N-2;++i){
+        if(A[i]>A[i+1] && A[i]>A[i-1]){
+            B[countPeaks]=i;
+            ++countPeaks;
+        }
+    }
+    return countPeaks;
+}
+
+int isNumFeasible(int B[], int numPeaks, int i){
+    int numRemainingFlags=i, lastestPoint=0, countPoints=0;
+    if(i<1){
+        return 0;
+    }
+    numRemainingFlags=numRemainingFlags-1;
+    countPoints=countPoints+1;
+    while(numRemainingFlags>0 && countPoints<=numPeaks){
+        if(B[countPoints]-B[lastestPoint]>=i){
+            lastestPoint=countPoints;
+            countPoints=countPoints+1;
+            numRemainingFlags=numRemainingFlags-1;
+        }
+        else{
+            countPoints=countPoints+1;
+        }
+    }
+    if(numRemainingFlags==0){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+
+int findMaxFlags(int B[], int numPeaks, int N){
+    int M=sqrt(N)+1;
+    if(M>numPeaks){
+        M=numPeaks;
+    }
+    for(int i=M;i>0;--i){
+        int feasibleFlags=isNumFeasible(B,numPeaks,i);
+        if(feasibleFlags==1){
+            return i;
+            break;
+        }
+    }
+    return 0;
+}
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N<=2){
+        return 0;
+    }
+
+    int B[N], numPeaks=0;
+    numPeaks=findPeaks(A,B,N);
+    int maxFlags=findMaxFlags(B,numPeaks,N);
+
+    return maxFlags;
+
+}

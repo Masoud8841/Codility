@@ -1,0 +1,18 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+#include <math.h>
+int solution(int N) {
+    // Implement your solution here
+    if(N==1){
+        return 4;
+    }
+    int A=1;
+    for(int i=sqrt(N);i>=1;--i){
+        if(N%i==0){
+            A=i;
+            break;
+        }
+    }
+    int B=N/A;
+    return 2*(A+B);
+}

@@ -1,0 +1,50 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+#include <math.h>
+int numFactors(int B[],int M){
+    int Mul=1;
+    for(int i=0;i<M;++i){
+        Mul=Mul*(B[i]+1);
+    }
+    return Mul;
+}
+
+int findPrimeFactors(int A[],int B[], int N, int M){
+    int countPrimes=0;
+    for(int i=0;i<M;++i){
+        B[i]=0;
+    }
+    for(int i=2;i<=M;++i){
+       if(N%i==0){
+            A[countPrimes]=i;
+            countPrimes=countPrimes+1;
+            while(N%i==0){
+                B[countPrimes-1]=B[countPrimes-1]+1;
+                N=N/i;
+            }
+            if(N==1){
+                break;
+            }
+        }
+    }
+    if(N>1){
+        A[countPrimes]=N;
+        countPrimes=countPrimes+1;
+        B[countPrimes-1]=B[countPrimes-1]+1;
+    }
+    return countPrimes;
+}
+
+int solution(int N) {
+    // Implement your solution here
+    if(N==1){
+        return 1;
+    }
+
+    int M=sqrt(N);
+    int A[M],B[M];
+
+    int countPrimes=findPrimeFactors(A,B,N,M);
+
+    return numFactors(B,countPrimes);
+}

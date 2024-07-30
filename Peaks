@@ -1,0 +1,67 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int findPeaks(int A[], int B[], int N){
+    int numPeaks=0;
+    for(int i=1;i<N-1;++i){
+        if(A[i]>A[i-1] && A[i]>A[i+1]){
+            B[numPeaks]=i;
+            ++numPeaks;
+        }
+    }
+    return numPeaks;
+}
+int isFeasible(int B[], int numPeaks, int i, int N){
+    int intLength=N/i, count=0, lastPeak=0;
+    if(B[0]>intLength-1){
+        return 0;
+    }
+    else{
+        ++count;
+    }
+    while(count*intLength<N && lastPeak<numPeaks){
+        if(B[lastPeak+1]>(count+1)*intLength-1){
+            return 0;
+        }
+        if(B[lastPeak+1]<count*intLength){
+            ++lastPeak;
+        }
+        else{
+            ++count;
+            ++lastPeak;
+        }
+    }
+    if(count*intLength>=N-1){
+        return 1;
+    }
+    else{
+        return 0;
+    } 
+}
+
+int findMaxIntervals(int B[], int numPeaks, int N){
+    int feasibleFlag=0;
+    for(int i=numPeaks;i>0;--i){
+        if(N%i==0){
+            feasibleFlag=isFeasible(B,numPeaks,i,N);
+            if(feasibleFlag==1){
+                return i;
+            }
+        }
+    }
+    return 0;
+}
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N<3){
+        return 0;
+    }
+    int B[N];
+    int numPeaks=findPeaks(A,B,N);
+
+    if(numPeaks==0){
+        return 0;
+    }
+    int maxIntervals=findMaxIntervals(B,numPeaks,N);
+
+    return maxIntervals;
+}

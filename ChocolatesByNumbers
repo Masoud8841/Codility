@@ -1,0 +1,19 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int BCD(int N, int M){
+    while(N>0 && M>0){
+        if(N>M){
+            N=N%M;
+        }
+        else{
+            M=M%N;
+        }
+    }
+    return N+M;
+}
+int solution(int N, int M) {
+    // Implement your solution here
+    M=M%N;
+    int commonDivisor=BCD(N,M);
+    return N/commonDivisor;
+}

@@ -1,0 +1,56 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int calLCD(int X, int Y){
+    while(X>0 && Y>0){
+        if(X>Y){
+            X=X%Y;
+        }
+        else{
+            Y=Y%X;
+        }
+    }
+    return X+Y;
+}
+int sameFactors(int P, int Q){
+    int X=P/Q, LCD;
+    while(X>1){
+        LCD=calLCD(X,Q);
+        if(LCD==1){
+            return 0;
+        }
+        else{
+            X=X/LCD;
+        }
+    }
+    return 1;
+}
+int haveCommonPrimes(int X, int Y){
+    if(X==1 && Y==1){
+        return 1;
+    }
+    int LCD=calLCD(X,Y);
+    if(LCD==1){
+        return 0;
+    }
+    if(sameFactors(X,LCD)!=1){
+        return 0;
+    }
+    if(sameFactors(Y,LCD)!=1){
+        return 0;
+    }
+    return 1;
+}
+
+
+int solution(int A[], int B[], int Z) {
+    // Implement your solution here
+    int count=0 , flag=0;
+    for(int i=0;i<Z;++i){
+        flag=haveCommonPrimes(A[i],B[i]);
+        //printf("%d and %d common factors test: %d \n",A[i],B[i],flag);
+        if(flag==1){
+            ++count;
+        }
+    }
+    return count;
+}

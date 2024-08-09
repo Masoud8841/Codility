@@ -1,0 +1,40 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int twoPow(int B){
+    int result=1;
+    for(int i=1;i<=B;++i){
+        result=2*result;
+    }
+    return result;
+}
+void findCombinations(int A, int B, int* C){
+    int divisor=twoPow(B);
+    *C=A%divisor;
+    return;
+}
+struct Results solution(int A[], int B[], int L) {
+    // Implement your solution here
+    int maxA=A[0], divisor=1024*1024*1024;
+    for(int i=1;i<L;++i){
+        if(A[i]>maxA){
+            maxA=A[i];
+        }
+    }
+    int FibSec[maxA];
+    FibSec[0]=1;
+    if(maxA>1){
+        FibSec[1]=2;
+    }
+    for(int i=2;i<maxA;++i){
+        FibSec[i]=(FibSec[i-1]+FibSec[i-2])%divisor;
+    }
+    
+    int* array=(int*)malloc(sizeof(int)*L);
+    for(int i=0;i<L;++i){
+        findCombinations(FibSec[A[i]-1],B[i],&array[i]);
+    }
+    struct Results result;
+    result.C = array;
+    result.L = L;
+    return result;
+}

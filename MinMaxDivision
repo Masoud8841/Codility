@@ -1,6 +1,7 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
 int sum_array(int*,int,int);
+int max_val(int*,int);
 int initial_guess(int*, int, int);
 int check_new_max_feasibility(int*, int, int, int);
 
@@ -15,6 +16,7 @@ int solution(int K, int M, int A[], int N) {
     if(M==0){
         return 0;
     }
+    M=max_val(A,N);
     int flag=check_new_max_feasibility(A,N,K,M);
     if(flag==1){
         return M;
@@ -103,4 +105,14 @@ int check_new_max_feasibility(int A[], int N, int K, int maxSec){
     }
     
     return flag;
+}
+////////////////////
+int max_val(int A[],int N){
+    int M=A[0];
+    for(int i=1;i<N;i++){
+        if(M<A[i]){
+            M=A[i];
+        }
+    }
+    return M;
 }

@@ -9,6 +9,12 @@ int solution(int K, int M, int A[], int N) {
     if(K==1){
         return sum_array(A,0,N);
     }
+    if(N==1){
+        return A[0];
+    }
+    if(M==0){
+        return 0;
+    }
     int flag=check_new_max_feasibility(A,N,K,M);
     if(flag==1){
         return M;
@@ -32,8 +38,7 @@ int solution(int K, int M, int A[], int N) {
     return rightLimit;
 }
 
-
-
+//////////////////////////////////////
 int sum_array(int A[], int i, int j){
     int sumVal=0;
     for(int k=i;k<j;k++){
@@ -41,7 +46,7 @@ int sum_array(int A[], int i, int j){
     }
     return sumVal;
 }
-
+//////////////////////////////////////
 int initial_guess(int A[], int N, int K){
     int sumA=sum_array(A,0,N);
     int avgA=1+(sumA/K);
@@ -62,12 +67,15 @@ int initial_guess(int A[], int N, int K){
             break;
         }
     }
-    currentSecVal=sum_array(A,indx+1,N);
-    if(currentSecVal>maxSecVal){
-        maxSecVal=currentSecVal;
+    if(countSections==K-1){
+        currentSecVal=sum_array(A,indx,N);
+        if(currentSecVal>maxSecVal){
+            maxSecVal=currentSecVal;
+        }
     }
     return maxSecVal;
 }
+///////////////////////////////////////
 int check_new_max_feasibility(int A[], int N, int K, int maxSec){
     int currentSum=0, countSectors=0, flag=1, indx=0;
     for(int i=0;i<N;i++){
@@ -87,9 +95,12 @@ int check_new_max_feasibility(int A[], int N, int K, int maxSec){
             break;
         }
     }
-    currentSum=sum_array(A,indx+1,N);
-    if(currentSum>maxSec){
-        flag=0;
+    if(countSectors==K-1){
+        currentSum=sum_array(A,indx,N);
+        if(currentSum>maxSec){
+            flag=0;
+        }
     }
+    
     return flag;
 }

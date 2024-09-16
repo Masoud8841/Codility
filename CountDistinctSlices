@@ -4,23 +4,38 @@ int find_unique_sequence(int*, int*, int, int);
 
 int solution(int M, int A[], int N) {
     // Implement your solution here
-    const int sizeB=100001, maxCount=1000000000; 
-    int countUnique=0, indx;
+    M=A[0];
+    for(int i=1;i<N;++i){
+        if(M<A[i]){
+            M=A[i];
+        }
+    }
+    const int maxCount=1000000000; 
+    int countUnique=0, indx=-1;
     if(M==0){
         return N;
     }
-    int B[sizeB];
-    for(int i=0;i<sizeB;i++){
+    int B[M+1];
+    for(int i=0;i<=M;i++){
         B[i]=-1;
     }
 
     for(int i=0;i<N;i++){
-        indx=find_unique_sequence(A,B,N,i);
-        //printf("i is %d, indx is %d \n",i,indx);
-        countUnique+=indx-i+1;
+        if(indx==N-1){
+            countUnique+=indx-i+1;
+        }
+        else if(indx>i && A[i-1]!=A[indx+1]){
+            countUnique+=indx-i+1;
+        }
+        else{
+            indx=find_unique_sequence(A,B,N,i);
+            countUnique+=indx-i+1; 
+        }
+        
         if(countUnique>maxCount){
             return maxCount;
         }
+        //printf("[i, indx, count]=[%d,%d,%d]\n",i,indx,countUnique);
     }
     return countUnique;
 }

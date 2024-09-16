@@ -1,33 +1,25 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
-void nail_planks(int*,int*,int*,int*,int*,int, int);
 
 int solution(int A[], int B[], int N, int C[], int M) {
     // Implement your solution here
-    int plankedCount=0, nailCount=0, D[N];
+    int D[N], lengthD=N, countNailed=0;
     for(int i=0;i<N;i++){
-        D[i]=1;
+        D[i]=i;
     }
-
-    while(plankedCount<N && nailCount<M){
-        nail_planks(A,B,C,D,&plankedCount,nailCount,N);
-        ++nailCount;
-    }
-    if(plankedCount==N){
-        return nailCount;
-    }
-    else{
-        return -1;
-    }
-}
-
-void nail_planks(int A[], int B[], int C[], int D[], int* plankCount, int nailCount, int N){
-    for(int i=0;i<N;++i){
-        if(D[i]==1){
-            if(C[nailCount]>=A[i] && C[nailCount]<=B[i]){
-                *plankCount=*plankCount+1;
-                D[i]=0;
+    for(int i=0;i<M;i++){
+        for(int j=lengthD-1;j>=0;j--){
+            if(C[i]>=A[D[j]] && C[i]<=B[D[j]]){
+                ++countNailed;
+                if(countNailed==N){
+                    return i+1;
+                }
+                if(j<lengthD-1){
+                    D[j]=D[lengthD-1];
+                }
+                --lengthD;
             }
-        }
+        } 
     }
+    return -1;
 }

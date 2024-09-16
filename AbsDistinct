@@ -1,0 +1,61 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int find_mid_indx(int*,int);
+void count_next(int*, int, int*, int*);
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    int indxPositive, indxNegative, countNum=0;
+    indxPositive=find_mid_indx(A,N);
+    indxNegative=indxPositive-1;
+    while(indxPositive<N || indxNegative>=0){
+        count_next(A,N,&indxNegative,&indxPositive);
+        ++countNum;
+    }
+    return countNum;
+}
+
+int find_mid_indx(int A[],int N){
+    int left=0, right=N-1, midPoint;
+    if(A[left]>=0){
+        return 0;
+    }
+    else if(A[right]<0){
+        return N;
+    }
+    else{
+        while(right-left>1){
+            midPoint=(left+right)/2;
+            if(A[midPoint]>=0){
+                right=midPoint;
+            }
+            else{
+                left=midPoint;
+            }
+        }
+        return right;
+    }
+}
+
+void count_next(int A[], int N, int* indxNegative, int* indexPositive){
+    int temp, pos=*indexPositive, neg=*indxNegative;
+    if(pos<N){
+        temp=A[pos];
+    }
+    else{
+        temp=-A[neg];
+    }
+    if(neg>=0){
+        if(-A[neg]<temp){
+            temp=-A[neg];
+        }
+    }
+    while(pos<N && A[pos]==temp){
+        ++pos;
+    }
+    while(neg>=0 && -A[neg]==temp){
+        --neg;
+    }
+    *indexPositive=pos;
+    *indxNegative=neg;
+}

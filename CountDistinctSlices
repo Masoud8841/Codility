@@ -1,0 +1,39 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int find_unique_sequence(int*, int*, int, int);
+
+int solution(int M, int A[], int N) {
+    // Implement your solution here
+    const int sizeB=100001, maxCount=1000000000; 
+    int countUnique=0, indx;
+    if(M==0){
+        return N;
+    }
+    int B[sizeB];
+    for(int i=0;i<sizeB;i++){
+        B[i]=-1;
+    }
+
+    for(int i=0;i<N;i++){
+        indx=find_unique_sequence(A,B,N,i);
+        //printf("i is %d, indx is %d \n",i,indx);
+        countUnique+=indx-i+1;
+        if(countUnique>maxCount){
+            return maxCount;
+        }
+    }
+    return countUnique;
+}
+
+
+int find_unique_sequence(int A[], int B[], int N, int i){
+    int indx=i;
+    while(B[A[indx]]<i){
+        B[A[indx]]=i;
+        ++indx;
+        if(indx==N){
+            break;
+        }
+    }
+    return indx-1;
+}

@@ -5,14 +5,21 @@ int find_unique_sequence(int*, int*, int, int);
 int solution(int M, int A[], int N) {
     // Implement your solution here
     M=A[0];
+    int minA=A[0];
     for(int i=1;i<N;++i){
         if(M<A[i]){
             M=A[i];
+        }
+        if(minA>A[i]){
+            minA=A[i];
         }
     }
     const int maxCount=1000000000; 
     int countUnique=0, indx=-1;
     if(M==0){
+        return N;
+    }
+    if(minA==M){
         return N;
     }
     int B[M+1];

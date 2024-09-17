@@ -1,20 +1,19 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
-int abs_value(int);
+void merge_sort(int*, int, int);
 
 int solution(int A[], int N) {
     // Implement your solution here
-    if(N<3){
-        return 0;
-    }
-    int countTriangles=0, lowerLimit, upperLimit;
+    merge_sort(A,0,N-1);
+    int countTriangles=0;
     for(int i=0;i<N-2;i++){
         for(int j=i+1;j<N-1;j++){
-            upperLimit=A[i]+A[j];
-            lowerLimit=abs_value(A[i]-A[j]);
             for(int k=j+1;k<N;k++){
-                if(A[k]<upperLimit && A[k]>lowerLimit){
+                if(A[i]+A[j]>A[k]){
                     ++countTriangles;
+                }
+                else{
+                    break;
                 }
             }
         }
@@ -22,9 +21,54 @@ int solution(int A[], int N) {
     return countTriangles;
 }
 
-int abs_value(int a){
-    if(a<0){
-        a=-a;
+void merge_sort(int A[], int i, int j){
+    int temp=0, N=j-i+1, leftHalf, rightHalf, midPoint=(i+j)/2;
+    if(j>i+1){
+        merge_sort(A,i,midPoint);
+        merge_sort(A,midPoint+1,j);
     }
-    return a;
+    else{
+        if(i==j){
+            return;
+        }
+        if(A[i]>A[j]){
+            temp=A[j];
+            A[j]=A[i];
+            A[i]=temp;
+        }
+        return;
+    }
+    int B[N];
+    leftHalf=i;
+    rightHalf=midPoint+1;
+    int countB=0;
+    while(countB<N){
+        if(leftHalf==midPoint+1){
+            B[countB]=A[rightHalf];
+            ++countB;
+            ++rightHalf;
+        }
+        else if(rightHalf==j+1){
+            B[countB]=A[leftHalf];
+            ++leftHalf;
+            ++countB;
+        }
+        else{
+            if(A[leftHalf]<=A[rightHalf]){
+                B[countB]=A[leftHalf];
+                ++leftHalf;
+                ++countB;
+            }
+            else{
+                B[countB]=A[rightHalf];
+                ++countB;
+                ++rightHalf;
+            }
+        }
+    }
+    for(int k=i;k<=j;k++){
+        A[k]=B[k-i];
+        //printf("A[%d]=%d\n",k,A[k]);
+    }
+    return;
 }

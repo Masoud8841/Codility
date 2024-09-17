@@ -4,6 +4,7 @@ int abs_value(int, int);
 void merge_sort(int*, int, int);
 int find_first_non_negative(int*, int);
 int find_min_val(int* , int, int);
+int find_minus_range(int*, int, int);
 
 int solution(int A[], int N) {
     // Implement your solution here
@@ -63,7 +64,7 @@ int find_first_non_negative(int A[],int N){
 }
 
 int find_min_val(int A[], int N, int indx){
-    int minVal=2*A[indx], temp;
+    int minVal=2*A[indx], temp, indx2;
     if(indx<N-1){
         temp=A[indx]+A[indx+1];
         if(minVal>temp){
@@ -82,7 +83,10 @@ int find_min_val(int A[], int N, int indx){
     }
 
     for(int i=indx;i<N;i++){
-        for(int j=indx-1;j>=0;j--){
+
+        indx2=find_minus_range(A,indx-1,A[i]-minVal);
+
+        for(int j=indx2;j>=0;j--){
             temp=abs_value(A[i],A[j]);
             if(minVal>temp){
                 minVal=temp;
@@ -146,4 +150,24 @@ void merge_sort(int A[], int i, int j){
         A[k]=B[k-i];
     }
     return;
+}
+
+int find_minus_range(int A[], int indx, int val){
+    int indx2, left=0, right=indx;
+    if(-A[right]>val){
+        return right;
+    }
+    if(-A[left]<val){
+        return -1;
+    }
+    while(right-left>1){
+        indx2=(right+left)/2;
+        if(-A[indx2]>=val){
+            left=indx2;
+        }
+        else{
+            right=indx2;
+        }
+    }
+    return right;
 }

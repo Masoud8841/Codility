@@ -1,20 +1,36 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
 int abs_value(int, int);
+void merge_sort(int*, int, int);
+int find_first_non_negative(int*, int);
+int find_min_val(int* , int, int);
 
 int solution(int A[], int N) {
     // Implement your solution here
-    int minValue, temp;
-    minValue=abs_value(A[0],A[0]);
-    for(int i=0;i<N;i++){
-        for(int j=i;j<N;j++){
-            temp=abs_value(A[i],A[j]);
-            if(minValue>temp){
-                minValue=temp;
-            }
-        }
+    if(N==1){
+        return abs_value(A[0],A[0]);
     }
-    return minValue;
+    merge_sort(A,0,N-1);
+    int indx=find_first_non_negative(A,N);
+    int minVal, temp;
+    if(indx==0){
+        minVal=2*A[0];
+        temp=A[0]+A[1];
+        if(minVal>temp){
+            minVal=temp;
+        }
+        return minVal;
+    }
+    if(indx==N){
+        minVal=-2*A[N-1];
+        temp=-A[N-1]-A[N-2];
+        if(minVal>temp){
+            minVal=temp;
+        }
+        return minVal;
+    }
+
+    return find_min_val(A,N,indx);
 }
 
 int abs_value(int a, int b){
@@ -23,4 +39,111 @@ int abs_value(int a, int b){
         c=-c;
     }
     return c;
+}
+
+int find_first_non_negative(int A[],int N){
+    if(N==1 || A[0]>=0){
+        return 0;
+    }
+    if(A[N-1]<0){
+        return N;
+    }
+    int left=0, right=N-1, indx;
+    while(right-left>1){
+        indx=(right+left)/2;
+        if(A[indx]<0){
+            left=indx;
+        }
+        else{
+            right=indx;
+        }
+    }
+    return right;
+
+}
+
+int find_min_val(int A[], int N, int indx){
+    int minVal=2*A[indx], temp;
+    if(indx<N-1){
+        temp=A[indx]+A[indx+1];
+        if(minVal>temp){
+            minVal=temp;
+        }
+    }
+    temp=-2*A[indx-1];
+    if(minVal>temp){
+        minVal=temp;
+    }
+    if(indx-1>0){
+        temp=-A[indx-1]-A[indx-2];
+        if(minVal>temp){
+            minVal=temp;
+        }
+    }
+
+    for(int i=indx;i<N;i++){
+        for(int j=indx-1;j>=0;j--){
+            temp=abs_value(A[i],A[j]);
+            if(minVal>temp){
+                minVal=temp;
+            }
+            if(A[i]+A[j]<-minVal){
+                break;
+            }
+        }
+    }
+
+    return minVal;
+    
+}
+
+void merge_sort(int A[], int i, int j){
+    int temp=0, N=j-i+1, leftHalf, rightHalf, midPoint=(i+j)/2;
+    if(j>i+1){
+        merge_sort(A,i,midPoint);
+        merge_sort(A,midPoint+1,j);
+    }
+    else{
+        if(i==j){
+            return;
+        }
+        if(A[i]>A[j]){
+            temp=A[j];
+            A[j]=A[i];
+            A[i]=temp;
+        }
+        return;
+    }
+    int B[N];
+    leftHalf=i;
+    rightHalf=midPoint+1;
+    int countB=0;
+    while(countB<N){
+        if(leftHalf==midPoint+1){
+            B[countB]=A[rightHalf];
+            ++countB;
+            ++rightHalf;
+        }
+        else if(rightHalf==j+1){
+            B[countB]=A[leftHalf];
+            ++leftHalf;
+            ++countB;
+        }
+        else{
+            if(A[leftHalf]<=A[rightHalf]){
+                B[countB]=A[leftHalf];
+                ++leftHalf;
+                ++countB;
+            }
+            else{
+                B[countB]=A[rightHalf];
+                ++countB;
+                ++rightHalf;
+            }
+        }
+    }
+    for(int k=i;k<=j;k++){
+        A[k]=B[k-i];
+    }
+    return;
 }

@@ -1,0 +1,20 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+
+int solution(int A[], int B[], int N) {
+    // Implement your solution here
+    int latestB, count=0;
+    if(N<=1){
+        return N;
+    }
+    count=1;
+    latestB=B[0];
+    for(int i=1;i<N;i++){
+        if(A[i]>latestB){
+            latestB=B[i];
+            ++count;
+        }
+    }
+    return count;
+
+}

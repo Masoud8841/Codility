@@ -1,0 +1,26 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int abs_value(int, int);
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    int minValue, temp;
+    minValue=abs_value(A[0],A[0]);
+    for(int i=0;i<N;i++){
+        for(int j=i;j<N;j++){
+            temp=abs_value(A[i],A[j]);
+            if(minValue>temp){
+                minValue=temp;
+            }
+        }
+    }
+    return minValue;
+}
+
+int abs_value(int a, int b){
+    int c=a+b;
+    if(c<0){
+        c=-c;
+    }
+    return c;
+}

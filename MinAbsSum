@@ -1,0 +1,73 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int abs_value(int);
+void add_new_element(int*, int, int);
+void zeros(int*,int);
+void cpy(int*,int*,int);
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    if(N==0){
+        return 0;
+    }
+    if(N==1){
+        return abs_value(A[0]);
+    }
+    const int M=101;
+    int B[M];
+    zeros(B,M);
+    B[abs(A[0])]=1;
+    for(int i=1;i<N;i++){
+        add_new_element(B,M,A[i]);
+    }
+    for(int i=0;i<M;i++){
+        if(B[i]==1){
+            return i;
+        }
+    }
+    return -1;
+}
+
+int abs_value(int a){
+    if(a<0){
+        a=-a;
+    }
+    return a;
+}
+void zeros(int A[], int N){
+    for(int i=0;i<N;i++){
+        A[i]=0;
+    }
+    return;
+}
+void cpy(int A[], int B[], int N){
+    for(int i=0;i<N;i++){
+        A[i]=B[i];
+    }
+    return;
+}
+
+void add_new_element(int B[], int M, int a){
+    a=abs_value(a);
+    if(a==0){
+        return;
+    }
+    int C[M], temp;
+    zeros(C,M);
+    for(int i=0;i<M;i++){
+        if(B[i]==1){
+            temp=i+a;
+            if(temp<M){
+                C[temp]=1;
+            }
+            temp=i-a;
+            if(temp>=0){
+               C[temp]=1;
+            }
+            else{
+                C[-temp]=1;
+            }
+        }
+    }
+    cpy(B,C,M);
+}

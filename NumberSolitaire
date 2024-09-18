@@ -1,0 +1,33 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+int cal_best_path(int*, int, int);
+int max_val(int, int);
+
+int solution(int A[], int N) {
+    // Implement your solution here
+    int B[N];
+    B[N-1]=A[N-1];
+    //printf("B[%d]=%d \n", N-1, B[N-1]);
+    for(int i=N-2;i>=0;i--){
+        B[i]=A[i]+cal_best_path(B,i,N);
+        //printf("B[%d]=%d \n", i, B[i]);
+    }
+    return B[0];
+}
+
+int cal_best_path(int B[], int i , int N){
+    int temp=B[i+1];
+    for(int j=2;j<7;j++){
+        if(i+j<N){
+            temp=max_val(temp,B[i+j]);
+        }
+    }
+    return temp;
+}
+
+int max_val(int a, int b){
+    if(a>=b){
+        return a;
+    }
+    return b;
+}

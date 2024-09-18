@@ -1,0 +1,17 @@
+// you can write to stdout for debugging purposes, e.g.
+// printf("this is a debug message\n");
+
+int solution(int K, int A[], int N) {
+    // Implement your solution here
+    int countRopes=0, length=0;
+    for(int i=0;i<N;i++){
+        if(length+A[i]>=K){
+            length=0;
+            ++countRopes;
+        }
+        else{
+            length+=A[i];
+        }
+    }
+    return countRopes;
+}

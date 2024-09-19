@@ -14,7 +14,7 @@ int solution(int A[], int N) {
     zeros(B,N);
     forward_steps(A,F,N);
     backward_steps(A,B,N);
-    for(int i=1;i<N-2;i++){
+    for(int i=1;i<N-1;i++){
         temp=B[i-1]+F[i+1];
         maxVal=max(temp,maxVal);
     }

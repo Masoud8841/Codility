@@ -1,29 +1,41 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
-void findNonDivisors(int A[], int B[], int N, int i){
-    
-    for(int j=i+1;j<N;++j){
-        if(A[i]%A[j]!=0){
-            B[i]=B[i]+1;
-        }
-        if(A[j]%A[i]!=0){
-            B[j]=B[j]+1;
-        }
-    }
-    return;
-    //printf("B[%d]=%d\n",i,N-count);
-}
+int max_element(int*,int);
+void zeros(int*,int);
+
 struct Results solution(int A[], int N) {
     // Implement your solution here
     int *B=(int *) malloc(N*sizeof(int));
-    for(int i=0;i<N;++i){
-        B[i]=0;
-    }
-    for(int i=0;i<N-1;++i){
-        findNonDivisors(A,B,N,i);
-    }
     struct Results result;
-    result.C =B;
+    result.C = B;
     result.L = N;
+    int M=max_element(A,N);
+    int C[M+1], temp;
+    zeros(C,M+1);
+    for(int i=0;i<N;i++){
+        temp=M/A[i];
+        for(int j=1;j<=temp;j++){
+            ++C[j*A[i]];
+        }
+    }
+    for(int i=0;i<N;i++){
+        B[i]=N-C[A[i]];
+    }
     return result;
+}
+
+int max_element(int A[], int N){
+    int max=A[0];
+    for(int i=1;i<N;i++){
+        if(max<A[i]){
+            max=A[i];
+        }
+    }
+    return max;
+}
+void zeros(int A[], int N){
+    for(int i=0;i<N;i++){
+        A[i]=0;
+    }
+    return;
 }

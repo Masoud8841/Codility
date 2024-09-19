@@ -1,127 +1,78 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
-#include <math.h>
-int isSemiPrime(int i){
-    int reminder=i;
-    int count=0;
-    if(reminder%2==0){
-        ++count;
-        reminder=reminder/2;
-    }
-    if(reminder%2==0){
-        ++count;
-        reminder=reminder/2;
-    }
-    if(count==2){
-        if(reminder==1){
-            return 1;
-        }
-        else{
-            return 0;
-        }
-    }
-    int sqrtR=sqrt(reminder);
-    for(int j=3;j<=reminder;j=j+2){
-        if(j>sqrtR && count==0){
-            return 0;
-        }
-        if(reminder%j==0){
-            ++count;
-            reminder=reminder/j;
-            if(reminder%j==0){
-                if(reminder==j){
-                    ++count;
-                    break;
-                }
-                else{
-                    return 0;
-                }
-            }
-            if(count==2 && reminder!=1){
-                return 0;
-            }
-        }
-    }
-    if(count==2){
-        return 1;
-    }
-    else{
-        return 0;
-    }
-}
-int findSemiPrimes(int semiPrimes[], int minP, int maxQ){
-    int semiFlag , count=0;
-    for(int i=minP;i<=maxQ;++i){
-        semiFlag=isSemiPrime(i);
-        if(semiFlag==1){
-            semiPrimes[count]=i;
-            ++count;
-        }
-    }
-    return count;
-}
-void numSemiPrimes(int semiPrimes[], int countSemiPrimes, int P, int Q, int array[], int indx){
-    int indxP=0, indxQ=countSemiPrimes-1;
-    int i=0, j=countSemiPrimes-1, k;
-    while(i<j-1){
-        k=(i+j)/2;
-        if(semiPrimes[k]>P){
-            j=k;
-        }
-        if(semiPrimes[k]<P){
-            i=k;
-        }
-        if(semiPrimes[k]==P){
-            indxP=k;
-            break;
-        }
-    }
-    if(semiPrimes[i]<P && semiPrimes[indxP]!=P){
-        indxP=i+1;
-    }
-    i=0;
-    j=countSemiPrimes-1;
-
-    while(i<j-1){
-        k=(i+j)/2;
-        if(semiPrimes[k]>Q){
-            j=k;
-        }
-        if(semiPrimes[k]<Q){
-            i=k;
-        }
-        if(semiPrimes[k]==Q){
-            indxQ=k;
-            break;
-        }
-    }
-    if(semiPrimes[j]>Q && semiPrimes[indxQ]!=Q){
-        indxQ=j-1;
-    }
-    array[indx]=indxQ-indxP+1;
-    return;
-}
+int max_element(int*,int);
+void zeros(int*, int);
+int is_cube(int);
 
 struct Results solution(int N, int P[], int Q[], int M) {
     // Implement your solution here
-    int minP=P[0], maxQ=Q[0];
-    for(int i=1;i<M;++i){
-        if(minP>P[i]){
-            minP=P[i];
-        }
-        if(maxQ<Q[i]){
-            maxQ=Q[i];
-        }
-    }
-    int semiPrimes[maxQ-minP+1];
-    int countSemiPrimes=findSemiPrimes(semiPrimes, minP, maxQ);
-
-    int * array=(int *)malloc(M*sizeof(int));
-    for(int i=0;i<M;++i){
-        numSemiPrimes(semiPrimes, countSemiPrimes, P[i], Q[i],array,i);
-    }
+    int* A=(int *) malloc(M*sizeof(int));
     struct Results result;
-    result.A = array;
+    result.A = A;
     result.M = M;
+
+    int maxQ=max_element(Q,M);
+    int C[maxQ+1], temp;
+    zeros(C,maxQ+1);
+    for(int i=2;i<maxQ+1;i++){
+        temp=maxQ/i;
+        for(int j=1;j<=temp;j++){
+            ++C[j*i];
+        }
+    }
+    temp=0;
+    int flag=1;
+    for(int i=0;i<maxQ+1;i++){
+        flag=is_cube(i);
+        if((C[i]==2 || C[i]==3)&& flag==0){
+            C[i]=temp+1;
+            ++temp;
+        }
+        else{
+            C[i]=temp;
+        }
+        //printf("C[%d]=%d\n",i,C[i]);
+    }
+    for(int i=0;i<M;i++){
+        A[i]=C[Q[i]]-C[P[i]-1];
+    }
+
+
     return result;
+}
+
+int max_element(int A[], int N){
+    int max=A[0];
+    for(int i=1;i<N;i++){
+        if(max<A[i]){
+            max=A[i];
+        }
+    }
+    return max;
+}
+void zeros(int A[], int N){
+    for(int i=0;i<N;i++){
+        A[i]=0;
+    }
+    return;
+}
+int is_cube(int N){
+    int left=0, right=100, mid, cube;
+    if(left*left*left==N || right*right*right==N){
+        return 1;
+    }
+    while(right-left>1){
+        mid=(right+left)/2;
+        cube=mid*mid*mid;
+        if(cube>N){
+            right=mid;
+        }
+        else if(cube<N){
+            left=mid;
+        }
+        else{
+            return 1;
+        }
+    }
+    return 0;
 }

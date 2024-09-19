@@ -1,40 +1,56 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
-int sum_array(int*,int,int);
-int min_element(int*,int,int);
+void zeros(int*,int);
+int max(int, int);
+void forward_steps(int*, int*, int);
+void backward_steps(int*, int*, int);
 
 int solution(int A[], int N) {
     // Implement your solution here
-    int maxSum=0, temp; 
-    for(int i=0;i<N-2;i++){
-        if(i==0 || i==N-3 || (A[i]<=0 && (A[i+1]>=0 || A[i+2]>=0))){
-            for(int j=i+2;j<N;j++){
-                if(j==N-1 || (A[j]<=0 && (A[j-1]>=0||A[j-2]>=0))){
-                    temp=sum_array(A,i+1,j-1)-min_element(A,i+1,j-1);
-                    if(temp>maxSum){
-                        //printf("(%d,%d)=%d\n",i,j,temp);
-                        maxSum=temp;
-                    }
-                }
-            }
-        }
+    A[0]=0;
+    A[N-1]=0;
+    int F[N], B[N], maxVal=0, temp;
+    zeros(F,N);
+    zeros(B,N);
+    forward_steps(A,F,N);
+    backward_steps(A,B,N);
+    for(int i=1;i<N-2;i++){
+        temp=B[i-1]+F[i+1];
+        maxVal=max(temp,maxVal);
     }
-    return maxSum;
+    return maxVal;
+    
 }
 
-int sum_array(int A[], int i, int j){
-    int sum=0;
-    for(int k=i;k<j+1;k++){
-        sum+=A[k];
+void zeros(int A[], int N){
+    for(int i=0;i<N;i++){
+        A[i]=0;
     }
-    return sum;
+    return;
 }
-int min_element(int A[],int i, int j){
-    int minVal=A[i];
-    for(int k=i+1;k<j+1;k++){
-        if(minVal>A[k]){
-            minVal=A[k];
-        }
+int max(int a, int b){
+    if(a>b){
+        return a;
     }
-    return minVal;
+    else{
+        return b;
+    }
+}
+void forward_steps(int A[], int F[], int N){
+    int temp;
+    F[N-1]=max(A[N-1],0);
+    for(int i=N-2;i>-1;i--){
+        temp=max(A[i],0);
+        F[i]=max(A[i]+F[i+1],temp);
+    }
+    return;
+}
+void backward_steps(int A[], int B[], int N){
+    int temp;
+    B[0]=max(A[0],0);
+    for(int i=1;i<N;i++){
+        temp=max(A[i],0);
+        B[i]=max(A[i]+B[i-1],temp);
+    }
+    return;
 }

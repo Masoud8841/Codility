@@ -1,11 +1,9 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
 void sort_merge(int array[][2],int, int);
-int bin_search_min_nails(int, int, int array[][2], int);
+int bin_search_min_nails(int, int, int array[][2], int, int);
 void cpy(int*, int array[][2], int);
-int bin_search_r(int,int array[][2],int,int);
-int bin_search_l(int,int array[][2],int,int);
-int min_element(int array[][2],int, int);
+int bin_search(int,int array[][2],int,int);
 
 int solution(int A[], int B[], int N, int C[], int M) {
     // Implement your solution here
@@ -14,7 +12,7 @@ int solution(int A[], int B[], int N, int C[], int M) {
     sort_merge(D,0,M-1);
     int temp, minIndex=-1;
     for(int i=0;i<N;i++){
-        temp=bin_search_min_nails(A[i],B[i],D,M);
+        temp=bin_search_min_nails(A[i],B[i],D,M, minIndex);
         if(temp>minIndex){
             minIndex=temp;
         }
@@ -83,16 +81,25 @@ void sort_merge(int D[][2], int i, int j){
     }
     return;
 }
-int bin_search_min_nails(int a, int b, int D[][2], int M){
-    int indxLeft, indxRight;
+int bin_search_min_nails(int a, int b, int D[][2], int M, int min){
+    int indxLeft, indxRight, temp;
     if(b<D[0][0] || a>D[M-1][0]){
         return M+1;
     }
-    indxRight=bin_search_r(b,D,0,M-1);
-    indxLeft=bin_search_l(a,D,0,indxRight);
-    return min_element(D,indxLeft,indxRight);
+    indxRight=bin_search(b,D,0,M-1);
+    temp=D[indxRight][1];
+    while(indxRight>0 && temp>min){
+        --indxRight;
+        if(D[indxRight][0]<a){
+            break;
+        }
+        if(D[indxRight][1]<temp){
+            temp=D[indxRight][1];
+        }
+    }
+    return temp;
 }
-int bin_search_r(int x, int D[][2], int i , int j){
+int bin_search(int x, int D[][2], int i , int j){
     int left=i, right=j, mid;
     if(x>=D[j][0]){
         return j;
@@ -107,29 +114,4 @@ int bin_search_r(int x, int D[][2], int i , int j){
         }
     }
     return left;
-}
-int bin_search_l(int x, int D[][2], int i , int j){
-    int left=i, right=j, mid;
-    if(x<=D[i][0]){
-        return i;
-    }
-    while(right-left>1){
-        mid=(right+left)/2;
-        if(x<=D[mid][0]){
-            right=mid;
-        }
-        else{
-            left=mid;
-        }
-    }
-    return right;
-}
-int min_element(int D[][2], int i, int j){
-    int min=D[i][1];
-    for(int k=i+1;k<=j;k++){
-        if(D[k][1]<min){
-            min=D[k][1];
-        }
-    }
-    return min;
 }

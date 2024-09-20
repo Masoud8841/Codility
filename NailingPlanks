@@ -1,25 +1,135 @@
 // you can write to stdout for debugging purposes, e.g.
 // printf("this is a debug message\n");
+void sort_merge(int array[][2],int, int);
+int bin_search_min_nails(int, int, int array[][2], int);
+void cpy(int*, int array[][2], int);
+int bin_search_r(int,int array[][2],int,int);
+int bin_search_l(int,int array[][2],int,int);
+int min_element(int array[][2],int, int);
 
 int solution(int A[], int B[], int N, int C[], int M) {
     // Implement your solution here
-    int D[N], lengthD=N, countNailed=0;
+    int D[M][2];
+    cpy(C,D,M);
+    sort_merge(D,0,M-1);
+    int temp, minIndex=-1;
     for(int i=0;i<N;i++){
-        D[i]=i;
+        temp=bin_search_min_nails(A[i],B[i],D,M);
+        if(temp>minIndex){
+            minIndex=temp;
+        }
+        if(minIndex>M){
+            return -1;
+        }
     }
+    return minIndex+1;
+}
+void cpy(int C[], int D[][2], int M){
     for(int i=0;i<M;i++){
-        for(int j=lengthD-1;j>=0;j--){
-            if(C[i]>=A[D[j]] && C[i]<=B[D[j]]){
-                ++countNailed;
-                if(countNailed==N){
-                    return i+1;
-                }
-                if(j<lengthD-1){
-                    D[j]=D[lengthD-1];
-                }
-                --lengthD;
-            }
-        } 
+        D[i][0]=C[i];
+        D[i][1]=i;
     }
-    return -1;
+    return;
+}
+void sort_merge(int D[][2], int i, int j){
+    int temp;
+    if(i==j){
+        return;
+    }
+    if(j==i+1){
+        if(D[i][0]>D[i+1][0]){
+            temp=D[i][0];
+            D[i][0]=D[i+1][0];
+            D[i+1][0]=temp;
+            temp=D[i][1];
+            D[i][1]=D[i+1][1];
+            D[i+1][1]=temp;
+        }
+        return;
+    }
+    temp=(i+j)/2;
+    sort_merge(D,i,temp);
+    sort_merge(D,temp+1,j);
+    int E[j-i+1][2], left=i, right=temp+1, count=0;
+    while(count<j-i+1){
+        if(left==temp+1){
+            E[count][0]=D[right][0];
+            E[count][1]=D[right][1];
+            ++count;
+            ++right;
+        }
+        else if (right==j+1){
+            E[count][0]=D[left][0];
+            E[count][1]=D[left][1];
+            ++count;
+            ++left;
+        }
+        else if (D[left][0]<=D[right][0]){
+            E[count][0]=D[left][0];
+            E[count][1]=D[left][1];
+            ++count;
+            ++left;
+        }
+        else{
+            E[count][0]=D[right][0];
+            E[count][1]=D[right][1];
+            ++count;
+            ++right; 
+        }
+    }
+    for(int k=0;k<j-i+1;k++){
+        D[i+k][0]=E[k][0];
+        D[i+k][1]=E[k][1];
+    }
+    return;
+}
+int bin_search_min_nails(int a, int b, int D[][2], int M){
+    int indxLeft, indxRight;
+    if(b<D[0][0] || a>D[M-1][0]){
+        return M+1;
+    }
+    indxRight=bin_search_r(b,D,0,M-1);
+    indxLeft=bin_search_l(a,D,0,indxRight);
+    return min_element(D,indxLeft,indxRight);
+}
+int bin_search_r(int x, int D[][2], int i , int j){
+    int left=i, right=j, mid;
+    if(x>=D[j][0]){
+        return j;
+    }
+    while(right-left>1){
+        mid=(right+left)/2;
+        if(x<D[mid][0]){
+            right=mid;
+        }
+        else{
+            left=mid;
+        }
+    }
+    return left;
+}
+int bin_search_l(int x, int D[][2], int i , int j){
+    int left=i, right=j, mid;
+    if(x<=D[i][0]){
+        return i;
+    }
+    while(right-left>1){
+        mid=(right+left)/2;
+        if(x<=D[mid][0]){
+            right=mid;
+        }
+        else{
+            left=mid;
+        }
+    }
+    return right;
+}
+int min_element(int D[][2], int i, int j){
+    int min=D[i][1];
+    for(int k=i+1;k<=j;k++){
+        if(D[k][1]<min){
+            min=D[k][1];
+        }
+    }
+    return min;
 }
